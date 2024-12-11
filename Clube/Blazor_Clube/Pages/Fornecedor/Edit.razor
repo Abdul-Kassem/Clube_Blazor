@@ -1,0 +1,217 @@
+﻿@page "/Fornecedores/Edit/{id:int}"
+@using Blazor_Clube.Models
+@using System.Text.Json.Nodes
+@inject HttpClient Http
+@inject NavigationManager navManager
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Editar Fornecedor</h1>
+
+        @if (fornecedor == null)
+        {
+            <p><em>Carregando...</em></p>
+        }
+        else
+        {
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Nome</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="FornecedorData.NomeRazaoSocial" />
+                    <span class="text-danger">@Erros["NomeRazaoSocial"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Endereço</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="FornecedorData.Endereco" />
+                    <span class="text-danger">@Erros["Endereço"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Bairro</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="FornecedorData.Bairro" />
+                    <span class="text-danger">@Erros["Bairro"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Numero</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="FornecedorData.Numero" />
+                    <span class="text-danger">@Erros["Numero"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Cep</label>
+                <div class="col-md-8">
+                    <input class="form-control"
+                           @bind="FornecedorData.CEP"
+                           @oninput="FormatarCEP" />
+                    <span class="text-danger">@Erros["Cep"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Cidade</label>
+                <div class="col-md-8">
+                    <select class="form-control" @bind="FornecedorData.CidadeId">
+                        <option value="">Selecione a cidade</option>
+                        @foreach (var cidade in cidades)
+                        {
+                            <option value="@cidade.Id">@cidade.Nome</option>
+                        }
+                    </select>
+                    <span class="text-danger">@Erros["Cidade"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">UF</label>
+                <div class="col-md-8">
+                    <select class="form-control" @bind="FornecedorData.SiglaId">
+                        <option value="">Selecione o UF</option>
+                        @foreach (var estado in estados)
+                        {
+                            <option value="@estado.Id">@estado.Sigla</option>
+                        }
+                    </select>
+                    <span class="text-danger">@Erros["Estado"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Celular</label>
+                <div class="col-md-8">
+                    <input class="form-control"
+                           @bind="FornecedorData.Celular"
+                           @oninput="FormatarCelular" />
+                    <span class="text-danger">@Erros["Celular"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Email</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="FornecedorData.Email" />
+                    <span class="text-danger">@Erros["Email"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Facebook</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="FornecedorData.Facebook" />
+                    <span class="text-danger">@Erros["Facebook"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Instagram</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="FornecedorData.Instagram" />
+                    <span class="text-danger">@Erros["Instagram"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 col-md-4 d-grid">
+                    <button class="btn btn-primary" @onclick="SaveFornecedor">Submit</button>
+                </div>
+                <div class="col-md-4 d-grid">
+                    <a class="btn btn-outline-primary" href="/Fornecedores">Cancelar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+    public Fornecedor? fornecedor = null;
+    public FornecedorDto FornecedorData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+    private List<Estado> estados = new List<Estado>();
+    private List<Cidade> cidades = new List<Cidade>();
+
+    private void FormatarCEP(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray());
+
+        if (input.Length > 5)
+            input = input.Insert(5, "-");
+
+        FornecedorData.CEP = input;
+    }
+
+    private void FormatarCelular(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray()); // Remove tudo que não for número
+
+        if (input.Length == 11) // Celular válido deve ter 11 dígitos
+        {
+            input = input.Insert(0, "(").Insert(3, ")").Insert(9, "-"); // Formata no formato (XX) XXXXX-XXXX
+        }
+        else if (input.Length != 0)
+        {
+            // Se o número não tiver 10 ou 11 dígitos, mantém o valor sem formatação
+            input = input;
+        }
+
+        FornecedorData.Celular = input; // Atribui o valor formatado ao campo Celular
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            fornecedor = await Http.GetFromJsonAsync<Fornecedor>("https://localhost:4000/api/Fornecedores/" + Id);
+            FornecedorData.NomeRazaoSocial = fornecedor?.NomeRazaoSocial ?? "";
+            FornecedorData.Endereco = fornecedor?.Endereco ?? "";
+            FornecedorData.Bairro = fornecedor?.Bairro ?? "";
+            FornecedorData.Numero = fornecedor?.Numero ?? "";
+            FornecedorData.CEP = fornecedor?.CEP ?? "";
+            FornecedorData.CidadeId = fornecedor?.CidadeId ?? "";
+            FornecedorData.SiglaId = fornecedor?.SiglaId ?? "";
+            FornecedorData.Celular = fornecedor?.Celular ?? "";
+            FornecedorData.Email = fornecedor?.Email ?? "";
+            FornecedorData.Facebook = fornecedor?.Facebook ?? "";
+            FornecedorData.Instagram = fornecedor?.Instagram ?? "";
+
+            estados = await Http.GetFromJsonAsync<List<Estado>>("https://localhost:4000/api/Estados");
+            cidades = await Http.GetFromJsonAsync<List<Cidade>>("https://localhost:4000/api/Cidades");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+    protected async Task SaveFornecedor()
+    {
+        var response = await Http.PutAsJsonAsync("https://localhost:4000/api/Fornecedores/" + Id, FornecedorData);
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Fornecedores");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+    }
+}

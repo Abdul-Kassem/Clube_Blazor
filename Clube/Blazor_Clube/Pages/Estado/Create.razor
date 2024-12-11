@@ -1,0 +1,68 @@
+﻿@page "/Estados/Create"
+@using Blazor_Clube.Models
+@using Microsoft.AspNetCore.Components
+@using System.Text.Json.Nodes
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Novo Estado</h1>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Nome</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="EstadoData.Nome" />
+                <span class="text-danger">@Erros["Nome"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Sigla</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="EstadoData.Sigla" />
+                <span class="text-danger">@Erros["Sigla"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4 col-md-4 d-grid">
+                <button class="btn btn-primary" @onclick="SaveEstado">Submit</button>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a class="btn btn-outline-primary" href="/Estados">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@inject NavigationManager navManager
+@inject HttpClient Http
+@code {
+    public EstadoDto EstadoData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+
+    protected async Task SaveEstado()
+    {
+        var response = await Http.PostAsJsonAsync("https://localhost:4000/api/Estados", EstadoData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Estados");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Json Response: /n" + strResponse);
+
+
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+                
+            }
+        }
+    }
+}

@@ -1,0 +1,20 @@
+﻿@page "/Dependentes/Delete/{id:int}"
+@inject NavigationManager NavManager
+@inject HttpClient Http
+
+<h1 class="mb-3">Deletar Dependente</h1>
+<p>Você tem certeza que deseja deletar esse dependente com o ID @Id?</p>
+<button class="btn btn-danger" @onclick="DeleteDependente">Deletar</button>
+<a class="btn btn-secondary" href="/dependentes">Cancelar</a>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+
+
+    protected async Task DeleteDependente()
+    {
+        var response = await Http.DeleteAsync("https://localhost:4000/api/Dependentes/" + Id);
+        NavManager.NavigateTo("/Dependentes");
+    }
+}

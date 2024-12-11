@@ -1,0 +1,20 @@
+﻿@page "/Estados/Delete/{id:int}"
+@inject NavigationManager NavManager
+@inject HttpClient Http
+
+<h1 class="mb-3">Deletar Estado</h1>
+<p>Você tem certeza que deseja deletar esse estado com o ID @Id?</p>
+<button class="btn btn-danger" @onclick="DeleteEstado">Deletar</button>
+<a class="btn btn-secondary" href="/estados">Cancelar</a>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+
+
+    protected async Task DeleteEstado()
+    {
+        var response = await Http.DeleteAsync("https://localhost:4000/api/Estados/" + Id);
+        NavManager.NavigateTo("/Estados");
+    }
+}

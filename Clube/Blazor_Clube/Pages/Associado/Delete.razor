@@ -1,0 +1,20 @@
+﻿@page "/Associados/Delete/{id:int}"
+@inject NavigationManager NavManager
+@inject HttpClient Http
+
+<h1 class="mb-3">Deletar Associados</h1>
+<p>Você tem certeza que deseja deletar esse associado com o ID @Id?</p>
+<button class="btn btn-danger" @onclick="DeleteAssociado">Deletar</button>
+<a class="btn btn-secondary" href="/associados">Cancelar</a>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+
+
+    protected async Task DeleteAssociado()
+    {
+        var response = await Http.DeleteAsync("https://localhost:4000/api/Associados/" + Id);
+        NavManager.NavigateTo("/Associados");
+    }
+}

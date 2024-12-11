@@ -1,0 +1,52 @@
+﻿@page "/EspacosLocaveis"
+@using Blazor_Clube.Models
+<h1 class="text-center mb-3">Lista de Espaços Locaveis</h1>
+
+<a class="btn btn-primary mb-3" href="/EspacosLocaveis/Create">Novo Espaco Locavel</a>
+
+@if (espacoslocaveis == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NomeEspaco</th>
+                <th>Tamanho em m²</th>
+                <th>CapacidadePessoas</th>
+                <th>Locavel</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var espacolocavel in espacoslocaveis)
+            {
+                <tr>
+                    <td>@espacolocavel.Id</td>
+                    <td>@espacolocavel.NomeEspaco</td>
+                    <td>@espacolocavel.Tamanho</td>
+                    <td>@espacolocavel.CapacidadePessoas</td>
+                    <td>@espacolocavel.Locavel</td>
+                    <td style="white-space:nowrap">
+                        <a class="btn btn-primary btn-sm" href="/EspacosLocaveis/Edit/@espacolocavel.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/EspacosLocaveis/Delete/@espacolocavel.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@inject HttpClient Http
+@code {
+    private List<EspacoLocavel>? espacoslocaveis;
+
+    protected override async Task OnInitializedAsync()
+    {
+        espacoslocaveis = await Http.GetFromJsonAsync<List<EspacoLocavel>>("https://localhost:4000/api/EspacosLocaveis");
+    }
+}

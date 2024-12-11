@@ -1,0 +1,49 @@
+﻿@page "/Estados"
+@using Blazor_Clube.Models
+<h1 class="text-center mb-3">Lista de Estados</h1>
+
+<a class="btn btn-primary mb-3" href="/Estados/Create">Novo Estado</a>
+
+@if (estados == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Sigla</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var estado in estados)
+            {
+                <tr>
+                    <td>@estado.Id</td>
+                    <td>@estado.Nome</td>
+                    <td>@estado.Sigla</td>
+                    <td style="white-space:nowrap">
+                        <a class="btn btn-primary btn-sm" href="/Estados/Edit/@estado.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/Estados/Delete/@estado.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@inject HttpClient Http
+@code {
+    private List<Estado>? estados;
+
+    protected override async Task OnInitializedAsync()
+    {
+        estados = await Http.GetFromJsonAsync<List<Estado>>("https://localhost:4000/api/Estados");
+    }
+
+}

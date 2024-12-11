@@ -1,0 +1,61 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js"
+    },
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\obj\\Debug\\net8.0\\compressed\\wsf5qz76sp.gz",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js.gz"
+    },
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Blazor_Clube.styles.css",
+      "PackagePath": "staticwebassets\\Blazor_Clube.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\wwwroot\\icon-192.png",
+      "PackagePath": "staticwebassets\\icon-192.png"
+    },
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\dinho\\Desktop\\Clube\\Blazor_Clube\\wwwroot\\sample-data\\weather.json",
+      "PackagePath": "staticwebassets\\sample-data\\weather.json"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Blazor_Clube.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Blazor_Clube.props",
+      "PackagePath": "build\\Blazor_Clube.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Blazor_Clube.props",
+      "PackagePath": "buildMultiTargeting\\Blazor_Clube.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Blazor_Clube.props",
+      "PackagePath": "buildTransitive\\Blazor_Clube.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

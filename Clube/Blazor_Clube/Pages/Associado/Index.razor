@@ -1,0 +1,105 @@
+﻿@page "/Associados"
+@using Blazor_Clube.Models
+<h1 class="text-center mb-3">Lista de Associados</h1>
+
+<a class="btn btn-primary mb-3" href="/Associados/Create">Novo Associado</a>
+
+@if (associados == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NomeTitular</th>
+                <th>Endereco</th>
+                <th>Bairro</th>
+                <th>Cep</th>
+                <th>Complemento</th>
+                <th>CidadeId</th>
+                <th>EstadoId</th>
+                <th>Celular</th>
+                <th>Email</th>
+                <th>Facebook</th>
+                <th>Instagram</th>
+                <th>CPF</th>
+                <th>RegistroGeral</th>
+                <th>DataNascimento</th>
+                <th>TipoDeAssociacao</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var associado in associados)
+            {
+                <tr>
+                    <td>@associado.Id</td>
+                    <td>@associado.NomeTitular</td>
+                    <td>@associado.Endereco</td>
+                    <td>@associado.Bairro</td>
+                    <td>@associado.Cep</td>
+                    <td>@associado.Complemento</td>
+                    <td>
+                        @* Display the supplier's name instead of the ID *@
+                        @{
+                            var cidade = cidades.FirstOrDefault(f => f.Id.ToString() == associado.CidadeId);
+                        }
+                        @if (cidade != null)
+                        {
+                            @cidade.Nome
+                        }
+                        else
+                        {
+                            <em>Cidade não encontrado</em>
+                        }
+                    </td>
+                    <td>
+                        @* Display the supplier's name instead of the ID *@
+                        @{
+                            var estado = estados.FirstOrDefault(f => f.Id.ToString() == associado.EstadoId);
+                        }
+                        @if (estado != null)
+                        {
+                            @estado.Sigla
+                        }
+                        else
+                        {
+                            <em>Estado não encontrado</em>
+                        }
+                    </td>
+                    <td>@associado.Celular</td>
+                    <td>@associado.Email</td>
+                    <td>@associado.Facebook</td>
+                    <td>@associado.Instagram</td>
+                    <td>@associado.CPF</td>
+                    <td>@associado.RegistroGeral</td>
+                    <td>@associado.DataNascimento</td>
+                    <td>@associado.TipoDeAssociacao</td>
+                    <td style="white-space:nowrap">
+                        <a class="btn btn-primary btn-sm" href="/Associados/Edit/@associado.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/Associados/Delete/@associado.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@inject HttpClient Http
+@code {
+    private List<Associado>? associados;
+    private List<Estado> estados = new List<Estado>();
+    private List<Cidade> cidades = new List<Cidade>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        associados = await Http.GetFromJsonAsync<List<Associado>>("https://localhost:4000/api/Associados");
+        estados = await Http.GetFromJsonAsync<List<Estado>>("https://localhost:4000/api/Estados");
+        cidades = await Http.GetFromJsonAsync<List<Cidade>>("https://localhost:4000/api/Cidades");
+    }
+
+}

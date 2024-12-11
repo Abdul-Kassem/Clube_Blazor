@@ -1,0 +1,36 @@
+﻿@page "/registros"
+@inject NavigationManager Navigation
+@using Blazor_Clube.Models
+
+<h3>Registros</h3>
+
+<div>
+    @foreach (var registro in registros)
+    {
+        <button @onclick="() => NavegarParaRegistro(registro.Rota)" class="btn btn-primary m-2">
+            @registro.Nome
+        </button>
+    }
+</div>
+
+@code {
+    private List<RegistroInfo> registros = new()
+    {
+        new RegistroInfo("Registro Evento", "/Eventos"),
+        new RegistroInfo("Registro Espaço Locável", "/EspacosLocaveis"),
+        new RegistroInfo("Registro Produto", "/Produtos"),
+        new RegistroInfo("Registro Dependente", "/Dependentes"),
+        new RegistroInfo("Registro Fornecedor", "/Fornecedores"),
+        new RegistroInfo("Registro Convidado", "/Convidados"),
+        new RegistroInfo("Registro Associado", "/Associados"),
+        new RegistroInfo("Registro Estado", "/Estados"),
+        new RegistroInfo("Registro Cidade", "/Cidades")
+    };
+
+    private void NavegarParaRegistro(string rota)
+    {
+        Navigation.NavigateTo(rota);
+    }
+
+    private record RegistroInfo(string Nome, string Rota);
+}

@@ -1,0 +1,98 @@
+﻿@page "/Produtos/Create"
+@using Blazor_Clube.Models
+@using Microsoft.AspNetCore.Components
+@using System.Text.Json.Nodes
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Novo Produto</h1>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Nome</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="ProdutoData.Nome" />
+                <span class="text-danger">@Erros["Nome"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Descrição</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="ProdutoData.Descricao" />
+                <span class="text-danger">@Erros["Descricao"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Preço</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="ProdutoData.Preco" />
+                <span class="text-danger">@Erros["Preco"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Fornecedor</label>
+            <div class="col-md-8">
+                <select class="form-control" @bind="ProdutoData.FornecedorId">
+                    <option value="">Selecione o fornecedor</option>
+                    @foreach (var fornecedor in Fornecedores)
+                    {
+                        <option value="@fornecedor.Id">@fornecedor.NomeRazaoSocial</option>
+                    }
+                </select>
+                <span class="text-danger">@Erros["Fornecedor"]?[0]</span>
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4 col-md-4 d-grid">
+                <button class="btn btn-primary" @onclick="SaveProduto">Submit</button>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a class="btn btn-outline-primary" href="/Produtos">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@inject NavigationManager navManager
+@inject HttpClient Http
+@code {
+    public ProdutoDto ProdutoData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+    public List<Fornecedor> Fornecedores { get; set; } = new List<Fornecedor>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the list of suppliers
+        Fornecedores = await Http.GetFromJsonAsync<List<Fornecedor>>("https://localhost:4000/api/Fornecedores");
+    }
+
+    protected async Task SaveProduto()
+    {
+        var response = await Http.PostAsJsonAsync("https://localhost:4000/api/Produtos", ProdutoData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Produtos");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Json Response: /n" + strResponse);
+
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error parsing response: " + ex.Message);
+            }
+        }
+    }
+}
+

@@ -1,0 +1,79 @@
+﻿@page "/Convidados"
+@using Blazor_Clube.Models
+<h1 class="text-center mb-3">Lista de Convidados</h1>
+
+<a class="btn btn-primary mb-3" href="/Convidados/Create">Novo Convidado</a>
+
+@if (convidados == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>RegistroGeral</th>
+                <th>Celular</th>
+                <th>Email</th>
+                <th>Evento</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var convidado in convidados)
+            {
+                <tr>
+                    <td>@convidado.Id</td>
+                    <td>@convidado.Nome</td>
+                    <td>@convidado.CPF</td>
+                    <td>@convidado.RegistroGeral</td>
+                    <td>@convidado.Celular</td>
+                    <td>@convidado.Email</td>
+                    <td>
+                        @* Display the supplier's name instead of the ID *@
+                        @{
+                            var evento = eventos.FirstOrDefault(f => f.Id.ToString() == convidado.EventoId);
+                        }
+                        @if (evento != null)
+                        {
+                            @evento.Nome
+                        }
+                        else
+                        {
+                            <em>Evento não encontrado</em>
+                        }
+                    </td>
+                    <td style="white-space:nowrap">
+                        <a class="btn btn-primary btn-sm" href="/Convidados/Edit/@convidado.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/Convidados/Delete/@convidado.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@inject HttpClient Http
+@code {
+    private List<Convidado>? convidados;
+    private List<Evento> eventos = new List<Evento>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            convidados = await Http.GetFromJsonAsync<List<Convidado>>("https://localhost:4000/api/Convidados");
+            eventos = await Http.GetFromJsonAsync<List<Evento>>("https://localhost:4000/api/Eventos");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+}
+

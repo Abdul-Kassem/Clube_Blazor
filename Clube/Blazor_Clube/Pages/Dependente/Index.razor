@@ -1,0 +1,57 @@
+﻿@page "/Dependentes"
+@using Blazor_Clube.Models
+<h1 class="text-center mb-3">Lista de Dependentes</h1>
+
+<a class="btn btn-primary mb-3" href="/Dependentes/Create">Novo Dependente</a>
+
+@if (dependentes == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>RegistroGeral</th>
+                <th>DataNascimento</th>
+                <th>TipoVinculo</th>
+                <th>SocioTitular</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dependente in dependentes)
+            {
+                <tr>
+                    <td>@dependente.Id</td>
+                    <td>@dependente.Nome</td>                 
+                    <td>@dependente.CPF</td>
+                    <td>@dependente.RG</td>
+                    <td>@dependente.DataNascimento</td>
+                    <td>@dependente.TipoVinculo</td>
+                    <td>@dependente.SocioTitular_Associado</td>
+                    <td style="white-space:nowrap">
+                        <a class="btn btn-primary btn-sm" href="/Dependentes/Edit/@dependente.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/Dependentes/Delete/@dependente.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@inject HttpClient Http
+@code {
+    private List<Dependente>? dependentes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dependentes = await Http.GetFromJsonAsync<List<Dependente>>("https://localhost:4000/api/Dependentes");
+    }
+
+}

@@ -1,0 +1,95 @@
+﻿@page "/Eventos"
+@using Blazor_Clube.Models
+<h1 class="text-center mb-3">Lista de Eventos</h1>
+
+<a class="btn btn-primary mb-3" href="/Eventos/Create">Novo Evento</a>
+
+@if (eventos == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>EspacoLocavel</th>
+                <th>Responsavel</th>
+                <th>Inicio</th>
+                <th>Fim</th>
+                <th>ValorLocação</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var evento in eventos)
+            {
+                <tr>
+                    <td>@evento.Id</td>
+                    <td>@evento.Nome</td>
+                    <td>@evento.Descricao</td>
+                    <td>
+                        @* Display the supplier's name instead of the ID *@
+                        @{
+                            var espacolocavel = espacoslocaveis.FirstOrDefault(f => f.Id.ToString() == evento.EspacoLocavelId);
+                        }
+                        @if (espacolocavel != null)
+                        {
+                            @espacolocavel.NomeEspaco
+                        }
+                        else
+                        {
+                            <em>Espaço não encontrado</em>
+                        }
+                    </td>
+                    <td>
+                        @* Display the supplier's name instead of the ID *@
+                        @{
+                            var associado = associados.FirstOrDefault(f => f.Id.ToString() == evento.ResponsavelId);
+                        }
+                        @if (associado != null)
+                        {
+                            @associado.NomeTitular
+                        }
+                        else
+                        {
+                            <em>associado não encontrado</em>
+                        }
+                    </td>
+                    <td>@evento.Inicio</td>
+                    <td>@evento.Fim</td>
+                    <td>@evento.ValorLocacao</td>
+                    <td style="white-space:nowrap">
+                        <a class="btn btn-primary btn-sm" href="/Eventos/Edit/@evento.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/Eventos/Delete/@evento.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@inject HttpClient Http
+@code {
+    private List<Evento>? eventos;
+    private List<EspacoLocavel> espacoslocaveis = new List<EspacoLocavel>();
+    private List<Associado> associados = new List<Associado>();
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            eventos = await Http.GetFromJsonAsync<List<Evento>>("https://localhost:4000/api/Eventos");
+            espacoslocaveis = await Http.GetFromJsonAsync<List<EspacoLocavel>>("https://localhost:4000/api/EspacosLocaveis");
+            associados = await Http.GetFromJsonAsync<List<Associado>>("https://localhost:4000/api/Associados");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+}

@@ -1,0 +1,73 @@
+﻿@page "/Cidades"
+@using Blazor_Clube.Models
+<h1 class="text-center mb-3">Lista de Cidades</h1>
+
+<a class="btn btn-primary mb-3" href="/Cidades/Create">Nova Cidade</a>
+
+@if (cidades == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>DDD</th>
+                <th>UF</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cidade in cidades)
+            {
+                <tr>
+                    <td>@cidade.Id</td>
+                    <td>@cidade.Nome</td>
+                    <td>@cidade.DDD</td>
+                    <td>
+                        @* Display the supplier's name instead of the ID *@
+                        @{
+                            var estado = estados.FirstOrDefault(f => f.Id.ToString() == cidade.EstadoId);
+                        }
+                        @if (estado != null)
+                        {
+                            @estado.Sigla
+                        }
+                        else
+                        {
+                            <em>Estado não encontrado</em>
+                        }
+                    </td>
+                    <td style="white-space:nowrap">
+                        <a class="btn btn-primary btn-sm" href="/Cidades/Edit/@cidade.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/Cidades/Delete/@cidade.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@inject HttpClient Http
+@code {
+    private List<Cidade>? cidades;
+    private List<Estado> estados = new List<Estado>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            cidades = await Http.GetFromJsonAsync<List<Cidade>>("https://localhost:4000/api/Cidades");
+            estados = await Http.GetFromJsonAsync<List<Estado>>("https://localhost:4000/api/Estados");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+}

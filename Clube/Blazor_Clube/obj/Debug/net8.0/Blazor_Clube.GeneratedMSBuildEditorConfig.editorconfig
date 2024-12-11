@@ -1,0 +1,191 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = Blazor_Clube
+build_property.RootNamespace = Blazor_Clube
+build_property.ProjectDir = C:\Users\dinho\Desktop\Clube\Blazor_Clube\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = false
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\dinho\Desktop\Clube\Blazor_Clube
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Associado/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXNzb2NpYWRvXENyZWF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Associado/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXNzb2NpYWRvXERlbGV0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Associado/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXNzb2NpYWRvXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Associado/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXNzb2NpYWRvXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Cidade/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2lkYWRlXENyZWF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Cidade/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2lkYWRlXERlbGV0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Cidade/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2lkYWRlXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Cidade/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2lkYWRlXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Convidado/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29udmlkYWRvXENyZWF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Convidado/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29udmlkYWRvXERlbGV0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Convidado/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29udmlkYWRvXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Convidado/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29udmlkYWRvXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Dependente/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVwZW5kZW50ZVxDcmVhdGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Dependente/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVwZW5kZW50ZVxEZWxldGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Dependente/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVwZW5kZW50ZVxFZGl0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Dependente/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVwZW5kZW50ZVxJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/EspacoLocavel/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXNwYWNvTG9jYXZlbFxDcmVhdGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/EspacoLocavel/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXNwYWNvTG9jYXZlbFxEZWxldGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/EspacoLocavel/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXNwYWNvTG9jYXZlbFxFZGl0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/EspacoLocavel/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXNwYWNvTG9jYXZlbFxJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Estado/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXN0YWRvXENyZWF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Estado/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXN0YWRvXERlbGV0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Estado/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXN0YWRvXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Estado/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXN0YWRvXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Evento/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXZlbnRvXENyZWF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Evento/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXZlbnRvXERlbGV0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Evento/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXZlbnRvXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Evento/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXZlbnRvXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Fornecedor/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9ybmVjZWRvclxDcmVhdGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Fornecedor/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9ybmVjZWRvclxEZWxldGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Fornecedor/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9ybmVjZWRvclxFZGl0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Fornecedor/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9ybmVjZWRvclxJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Produto/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHV0b1xDcmVhdGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Produto/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHV0b1xEZWxldGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Produto/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHV0b1xFZGl0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Produto/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHV0b1xJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Pages/Registros.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0cm9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-g0niq5auv5
+
+[C:/Users/dinho/Desktop/Clube/Blazor_Clube/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-yb9kfaw15y

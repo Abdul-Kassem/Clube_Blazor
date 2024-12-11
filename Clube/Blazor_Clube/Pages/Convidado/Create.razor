@@ -1,0 +1,174 @@
+﻿@page "/Convidados/Create"
+@using Blazor_Clube.Models
+@using Microsoft.AspNetCore.Components
+@using System.Text.Json.Nodes
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Novo Convidado</h1>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Nome</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="ConvidadoData.Nome" />
+                <span class="text-danger">@Erros["Nome"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Cpf</label>
+            <div class="col-md-8">
+                <input class="form-control"
+                       @bind="ConvidadoData.CPF"
+                       @oninput="FormatarCPF" />
+                <span class="text-danger">@Erros["Cpf"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">RegistroGeral</label>
+            <div class="col-md-8">
+                <input class="form-control"
+                       @bind="ConvidadoData.RegistroGeral"
+                       @oninput="FormatarRegistroGeral" />
+                <span class="text-danger">@Erros["RegistroGeral"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Celular</label>
+            <div class="col-md-8">
+                <input class="form-control"
+                       @bind="ConvidadoData.Celular"
+                       @oninput="FormatarCelular" />
+                <span class="text-danger">@Erros["Celular"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Email</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="ConvidadoData.Email" />
+                <span class="text-danger">@Erros["Email"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Evento</label>
+            <div class="col-md-8">
+                <select class="form-control" @bind="ConvidadoData.EventoId">
+                    <option value="">Selecione o evento</option>
+                    @foreach (var evento in Eventos)
+                    {
+                        <option value="@evento.Id">@evento.Nome</option>
+                    }
+                </select>
+                <span class="text-danger">@Erros["Evento"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4 col-md-4 d-grid">
+                <button class="btn btn-primary" @onclick="SaveConvidado">Submit</button>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a class="btn btn-outline-primary" href="/Convidados">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@inject NavigationManager navManager
+@inject HttpClient Http
+@code {
+    public ConvidadoDto ConvidadoData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+    public List<Evento> Eventos { get; set; } = new List<Evento>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the list of suppliers
+        Eventos = await Http.GetFromJsonAsync<List<Evento>>("https://localhost:4000/api/Eventos");
+    }
+
+    private void FormatarCPF(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray());
+
+        if (input.Length > 9)
+            input = input.Insert(9, "-");
+        if (input.Length > 6)
+            input = input.Insert(6, ".");
+        if (input.Length > 3)
+            input = input.Insert(3, ".");
+
+        ConvidadoData.CPF = input;
+    }
+
+    private void FormatarCelular(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray()); // Remove tudo que não for número
+
+        if (input.Length == 11) // Celular válido deve ter 11 dígitos
+        {
+            input = input.Insert(0, "(").Insert(3, ")").Insert(9, "-"); // Formata no formato (XX) XXXXX-XXXX
+        }
+        else if (input.Length != 0)
+        {
+            // Se o número não tiver 10 ou 11 dígitos, mantém o valor sem formatação
+            input = input;
+        }
+
+        ConvidadoData.Celular = input; // Atribui o valor formatado ao campo Celular
+    }
+
+
+
+
+
+    private void FormatarRegistroGeral(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray()); // Keep only digits
+
+        if (input.Length > 11)
+            input = input.Substring(0, 11); // Limit the input to 11 digits (XXX.XXX.XXX-X format)
+
+        // Add the dots and hyphen at the correct positions
+        if (input.Length > 8)
+            input = input.Insert(8, "-"); // Insert the hyphen after the 9th digit
+        if (input.Length > 6)
+            input = input.Insert(5, "."); // Insert the first dot after the 6th digit
+        if (input.Length > 3)
+            input = input.Insert(2, "."); // Insert the second dot after the 3rd digit
+
+        ConvidadoData.RegistroGeral = input;
+    }
+
+    protected async Task SaveConvidado()
+    {
+        var response = await Http.PostAsJsonAsync("https://localhost:4000/api/Convidados", ConvidadoData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Convidados");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Json Response: /n" + strResponse);
+
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+    }
+}
+

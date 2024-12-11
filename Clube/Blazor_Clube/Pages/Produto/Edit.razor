@@ -1,0 +1,120 @@
+﻿@page "/Produtos/Edit/{id:int}"
+@using Blazor_Clube.Models
+@using System.Text.Json.Nodes
+@inject HttpClient Http
+@inject NavigationManager navManager
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Editar Produto</h1>
+
+        @if (produto == null)
+        {
+            <p><em>Carregando...</em></p>
+        }
+        else
+        {
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Nome</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="ProdutoData.Nome" />
+                    <span class="text-danger">@Erros["Nome"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Descrição</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="ProdutoData.Descricao" />
+                    <span class="text-danger">@Erros["Descricao"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Preço</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="ProdutoData.Preco" />
+                    <span class="text-danger">@Erros["Preco"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Fornecedor</label>
+                <div class="col-md-8">
+                    <select class="form-control" @bind="ProdutoData.FornecedorId">
+                        <option value="">Selecione um fornecedor</option>
+                        @foreach (var fornecedor in fornecedores)
+                        {
+                            <option value="@fornecedor.Id" selected="@fornecedor.Id == ProdutoData.FornecedorId">@fornecedor.NomeRazaoSocial</option>
+                        }
+                    </select>
+                    <span class="text-danger">@Erros["Fornecedor"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 col-md-4 d-grid">
+                    <button class="btn btn-primary" @onclick="SaveProduto">Salvar</button>
+                </div>
+                <div class="col-md-4 d-grid">
+                    <a class="btn btn-outline-primary" href="/Produtos">Cancelar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Produto? produto = null;
+    public ProdutoDto ProdutoData { get; set; } = new();
+    public JsonNode Erros { get; set; } = new JsonObject();
+    private List<Fornecedor> fornecedores = new List<Fornecedor>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            // Fetch the product data
+            produto = await Http.GetFromJsonAsync<Produto>($"https://localhost:4000/api/Produtos/{Id}");
+            if (produto != null)
+            {
+                ProdutoData.Nome = produto.Nome;
+                ProdutoData.Descricao = produto.Descricao;
+                ProdutoData.Preco = produto.Preco;
+                ProdutoData.FornecedorId = produto.FornecedorId;
+
+                // Fetch the list of suppliers for the dropdown
+                fornecedores = await Http.GetFromJsonAsync<List<Fornecedor>>("https://localhost:4000/api/Fornecedores");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+    protected async Task SaveProduto()
+    {
+        var response = await Http.PutAsJsonAsync($"https://localhost:4000/api/Produtos/{Id}", ProdutoData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Produtos");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+                // Handle exception
+            }
+        }
+    }
+}

@@ -1,0 +1,182 @@
+﻿@page "/Eventos/Create"
+@using Blazor_Clube.Models
+@using Microsoft.AspNetCore.Components
+@using System.Text.Json.Nodes
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Novo Evento</h1>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Nome</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="EventoData.Nome" />
+                <span class="text-danger">@Erros["Nome"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Descrição</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="EventoData.Descricao" />
+                <span class="text-danger">@Erros["Descrição"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Espaço Locavel</label>
+            <div class="col-md-8">
+                <select class="form-control" @bind="EventoData.EspacoLocavelId">
+                    <option value="">Selecione o espaço</option>
+                    @foreach (var espacolocavel in EspacosLocaveis)
+                    {
+                        <option value="@espacolocavel.Id">@espacolocavel.NomeEspaco</option>
+                    }
+                </select>
+                <span class="text-danger">@Erros["Espaço Locavel"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Responsável</label>
+            <div class="col-md-8">
+                <select class="form-control" @bind="EventoData.ResponsavelId">
+                    <option value="">Selecione o responspável</option>
+                    @foreach (var associado in Associados)
+                    {
+                        <option value="@associado.Id">@associado.NomeTitular</option>
+                    }
+                </select>
+                <span class="text-danger">@Erros["Responsável"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Inicio</label>
+            <div class="col-md-8">
+                <input class="form-control" 
+                    @bind="EventoData.Inicio"
+                    @oninput="FormatarInicio" />
+                <span class="text-danger">@Erros["Inicio"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Fim</label>
+            <div class="col-md-8">
+                <input class="form-control" 
+                       @bind="EventoData.Fim"
+                       @oninput="FormatarFim" />
+                <span class="text-danger">@Erros["Fim"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Valor Locação</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="EventoData.ValorLocacao" />
+                <span class="text-danger">@Erros["ValorLocacao"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4 col-md-4 d-grid">
+                <button class="btn btn-primary" @onclick="SaveEvento">Submit</button>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a class="btn btn-outline-primary" href="/Eventos">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@inject NavigationManager navManager
+@inject HttpClient Http
+@code {
+    public EventoDto EventoData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+    public List<EspacoLocavel> EspacosLocaveis { get; set; } = new List<EspacoLocavel>();
+    public List<Associado> Associados { get; set; } = new List<Associado>();
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the list of suppliers
+        EspacosLocaveis = await Http.GetFromJsonAsync<List<EspacoLocavel>>("https://localhost:4000/api/EspacosLocaveis");
+        Associados = await Http.GetFromJsonAsync<List<Associado>>("https://localhost:4000/api/Associados");
+    }
+
+    protected async Task SaveEvento()
+    {
+        var response = await Http.PostAsJsonAsync("https://localhost:4000/api/Eventos", EventoData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Eventos");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Json Response: /n" + strResponse);
+
+
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+                
+            }
+        }
+    }
+    private void FormatarInicio(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray());
+
+        if (input.Length > 4)
+            input = input.Insert(4, "/");
+        if (input.Length > 2)
+            input = input.Insert(2, "/");
+
+        if (input.Length > 10)
+        {
+            input = input.Insert(10, " "); // Insere um espaço após a data
+        }
+        if (input.Length > 12)
+        {
+            input = input.Insert(13, ":"); // Insere os dois pontos no horário
+        }
+
+        if (input.Length > 16) // Limita ao formato DD/MM/AAAA HH:MM
+            input = input.Substring(0, 16);
+
+        EventoData.Inicio = input;
+    }
+
+    private void FormatarFim(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray());
+
+        if (input.Length > 4)
+            input = input.Insert(4, "/");
+        if (input.Length > 2)
+            input = input.Insert(2, "/");
+
+        if (input.Length > 10)
+        {
+            input = input.Insert(10, " "); // Insere um espaço após a data
+        }
+        if (input.Length > 12)
+        {
+            input = input.Insert(13, ":"); // Insere os dois pontos no horário
+        }
+
+        if (input.Length > 16) // Limita ao formato DD/MM/AAAA HH:MM
+            input = input.Substring(0, 16);
+
+        EventoData.Fim = input;
+    }
+
+}

@@ -1,0 +1,74 @@
+﻿@page "/Produtos"
+@using Blazor_Clube.Models
+<h1 class="text-center mb-3">Lista de Produtos</h1>
+
+<a class="btn btn-primary mb-3" href="/Produtos/Create">Novo Produto</a>
+
+@if (produtos == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Preço</th>
+                <th>Fornecedor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produto in produtos)
+            {
+                <tr>
+                    <td>@produto.Id</td>
+                    <td>@produto.Nome</td>
+                    <td>@produto.Descricao</td>
+                    <td>@produto.Preco</td>
+                    <td>
+                        @* Display the supplier's name instead of the ID *@
+                        @{
+                            var fornecedor = fornecedores.FirstOrDefault(f => f.Id.ToString() == produto.FornecedorId);
+                        }
+                        @if (fornecedor != null)
+                        {
+                            @fornecedor.NomeRazaoSocial
+                        }
+                        else
+                        {
+                            <em>Fornecedor não encontrado</em>
+                        }
+                    </td>
+                    <td style="white-space:nowrap">
+                        <a class="btn btn-primary btn-sm" href="/Produtos/Edit/@produto.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/Produtos/Delete/@produto.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@inject HttpClient Http
+@code {
+    private List<Produto>? produtos;
+    private List<Fornecedor> fornecedores = new List<Fornecedor>();
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            produtos = await Http.GetFromJsonAsync<List<Produto>>("https://localhost:4000/api/Produtos");
+            fornecedores = await Http.GetFromJsonAsync<List<Fornecedor>>("https://localhost:4000/api/Fornecedores");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+}

@@ -1,0 +1,147 @@
+﻿@page "/Eventos/Edit/{id:int}"
+@using Blazor_Clube.Models
+@using System.Text.Json.Nodes
+@inject HttpClient Http
+@inject NavigationManager navManager
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Editar Evento</h1>
+
+        @if (evento == null)
+        {
+            <p><em>Carregando...</em></p>
+        }
+        else
+        {
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Nome</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EventoData.Nome" />
+                    <span class="text-danger">@Erros["Nome"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Descrição</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EventoData.Descricao" />
+                    <span class="text-danger">@Erros["Descrição"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Espaço Locavel</label>
+                <div class="col-md-8">
+                    <select class="form-control" @bind="EventoData.EspacoLocavelId">
+                        <option value="">Selecione o espaço</option>
+                        @foreach (var espacolocavel in espacoslocaveis)
+                        {
+                            <option value = "@espacolocavel.Id" selected = "@espacolocavel.Id == EventoData.EspacoLocavelId" > @espacolocavel.NomeEspaco </option>
+                        }
+                    </select>
+                    <span class="text-danger">@Erros["Espaço Locavel"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Responsável</label>
+                <div class="col-md-8">
+                    <select class="form-control" @bind="EventoData.ResponsavelId">
+                        <option value="">Selecione o responspável</option>
+                        @foreach (var associado in Associados)
+                        {
+                            <option value="@associado.Id">@associado.NomeTitular</option>
+                        }
+                    </select>
+                    <span class="text-danger">@Erros["Responsável"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Inicio</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EventoData.Inicio" />
+                    <span class="text-danger">@Erros["Inicio"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Fim</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EventoData.Fim" />
+                    <span class="text-danger">@Erros["Fim"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Valor Locação</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EventoData.ValorLocacao" />
+                    <span class="text-danger">@Erros["ValorLocacao"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 col-md-4 d-grid">
+                    <button class="btn btn-primary" @onclick="SaveEvento">Submit</button>
+                </div>
+                <div class="col-md-4 d-grid">
+                    <a class="btn btn-outline-primary" href="/EspacosLocaveis">Cancelar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+    public Evento? evento = null;
+    public EventoDto EventoData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+    private List<EspacoLocavel> espacoslocaveis = new List<EspacoLocavel>();
+    private List<Associado> Associados = new List<Associado>();
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            evento = await Http.GetFromJsonAsync<Evento>("https://localhost:4000/api/Eventos/" + Id);
+            EventoData.Nome = evento?.Nome ?? "";
+            EventoData.Descricao = evento?.Descricao ?? "";
+            EventoData.EspacoLocavelId = evento?.EspacoLocavelId ?? "";
+            EventoData.ResponsavelId = evento?.ResponsavelId ?? "";
+            EventoData.Inicio = evento.Inicio;
+            EventoData.Fim = evento.Fim;
+            EventoData.ValorLocacao = evento.ValorLocacao;
+
+            espacoslocaveis = await Http.GetFromJsonAsync<List<EspacoLocavel>>("https://localhost:4000/api/EspacosLocaveis");
+            Associados = await Http.GetFromJsonAsync<List<Associado>>("https://localhost:4000/api/Associados");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+    protected async Task SaveEvento()
+    {
+        var response = await Http.PutAsJsonAsync("https://localhost:4000/api/Eventos/" + Id, EventoData);
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Eventos");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+    }
+}

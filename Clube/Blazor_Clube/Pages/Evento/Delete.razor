@@ -1,0 +1,20 @@
+﻿@page "/Eventos/Delete/{id:int}"
+@inject NavigationManager NavManager
+@inject HttpClient Http
+
+<h1 class="mb-3">Deletar Evento</h1>
+<p>Você tem certeza que deseja deletar esse evento com o ID @Id?</p>
+<button class="btn btn-danger" @onclick="DeleteEvento">Deletar</button>
+<a class="btn btn-secondary" href="/Eventos">Cancelar</a>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+
+
+    protected async Task DeleteEvento()
+    {
+        var response = await Http.DeleteAsync("https://localhost:4000/api/Eventos/" + Id);
+        NavManager.NavigateTo("/Eventos");
+    }
+}

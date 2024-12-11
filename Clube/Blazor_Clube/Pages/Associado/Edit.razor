@@ -1,0 +1,315 @@
+﻿@page "/Associados/Edit/{id:int}"
+@using Blazor_Clube.Models
+@using System.Text.Json.Nodes
+@inject HttpClient Http
+@inject NavigationManager navManager
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Editar Associado</h1>
+
+        @if (associado == null)
+        {
+            <p><em>Carregando...</em></p>
+        }
+        else
+        {
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Nome</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="AssociadoData.NomeTitular" />
+                    <span class="text-danger">@Erros["Nome"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Endereço</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="AssociadoData.Endereco" />
+                    <span class="text-danger">@Erros["Endereço"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Bairro</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="AssociadoData.Bairro" />
+                    <span class="text-danger">@Erros["Bairro"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Cep</label>
+                <div class="col-md-8">
+                    <input class="form-control"
+                           @bind="AssociadoData.Cep"
+                           @oninput="FormatarCEP" />
+                    <span class="text-danger">@Erros["Cep"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Complemento</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="AssociadoData.Complemento" />
+                    <span class="text-danger">@Erros["Complemento"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Cidade</label>
+                <div class="col-md-8">
+                    <select class="form-control" @bind="AssociadoData.CidadeId">
+                        <option value="">Selecione a cidade</option>
+                        @foreach (var cidade in cidades)
+                        {
+                            <option value="@cidade.Id">@cidade.Nome</option>
+                        }
+                    </select>
+                    <span class="text-danger">@Erros["Cidade"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">UF</label>
+                <div class="col-md-8">
+                    <select class="form-control" @bind="AssociadoData.EstadoId">
+                        <option value="">Selecione o Uf</option>
+                        @foreach (var estado in estados)
+                        {
+                            <option value="@estado.Id">@estado.Sigla</option>
+                        }
+                    </select>
+                    <span class="text-danger">@Erros["Estado"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Celular</label>
+                <div class="col-md-8">
+                    <input class="form-control"
+                           @bind="AssociadoData.Celular"
+                           @oninput="FormatarCelular" />
+                    <span class="text-danger">@Erros["Celular"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Email</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="AssociadoData.Email" />
+                    <span class="text-danger">@Erros["Email"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Facebook</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="AssociadoData.Facebook" />
+                    <span class="text-danger">@Erros["Facebook"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Instagram</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="AssociadoData.Instagram" />
+                    <span class="text-danger">@Erros["Instagram"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Cpf</label>
+                <div class="col-md-8">
+                    <input class="form-control"
+                           @bind="AssociadoData.CPF"
+                           @oninput="FormatarCPF" />
+                    <span class="text-danger">@Erros["Cpf"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">RegistroGeral</label>
+                <div class="col-md-8">
+                    <input class="form-control"
+                           @bind="AssociadoData.RegistroGeral"
+                           @oninput="FormatarRegistroGeral" />
+                    <span class="text-danger">@Erros["RegistroGeral"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Data de Nascimento</label>
+                <div class="col-md-8">
+                    <input class="form-control"
+                           @bind="AssociadoData.DataNascimento"
+                           @oninput="FormatarDataNascimento" />
+                    <span class="text-danger">@Erros["Data de Nascimento"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Tipo de Associação</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="AssociadoData.TipoDeAssociacao" />
+                    <span class="text-danger">@Erros["Tipo de Associação"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 col-md-4 d-grid">
+                    <button class="btn btn-primary" @onclick="SaveAssociado">Submit</button>
+                </div>
+                <div class="col-md-4 d-grid">
+                    <a class="btn btn-outline-primary" href="/Associados">Cancelar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+    public Associado? associado = null;
+    public AssociadoDto AssociadoData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+    private List<Estado> estados = new List<Estado>();
+    private List<Cidade> cidades = new List<Cidade>();
+
+    private void FormatarCPF(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray());
+
+        if (input.Length > 9)
+            input = input.Insert(9, "-");
+        if (input.Length > 6)
+            input = input.Insert(6, ".");
+        if (input.Length > 3)
+            input = input.Insert(3, ".");
+
+        AssociadoData.CPF = input;
+    }
+
+    private void FormatarCEP(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray());
+
+        if (input.Length > 5)
+            input = input.Insert(5, "-");
+
+        AssociadoData.Cep = input;
+    }
+
+    private void FormatarCelular(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray()); // Remove tudo que não for número
+
+        if (input.Length == 11) // Celular válido deve ter 11 dígitos
+        {
+            input = input.Insert(0, "(").Insert(3, ")").Insert(9, "-"); // Formata no formato (XX) XXXXX-XXXX
+        }
+        else if (input.Length != 0)
+        {
+            // Se o número não tiver 10 ou 11 dígitos, mantém o valor sem formatação
+            input = input;
+        }
+
+        AssociadoData.Celular = input; // Atribui o valor formatado ao campo Celular
+    }
+
+
+
+
+
+    private void FormatarRegistroGeral(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray()); // Keep only digits
+
+        if (input.Length > 11)
+            input = input.Substring(0, 11); // Limit the input to 11 digits (XXX.XXX.XXX-X format)
+
+        // Add the dots and hyphen at the correct positions
+        if (input.Length > 8)
+            input = input.Insert(8, "-"); // Insert the hyphen after the 9th digit
+        if (input.Length > 6)
+            input = input.Insert(5, "."); // Insert the first dot after the 6th digit
+        if (input.Length > 3)
+            input = input.Insert(2, "."); // Insert the second dot after the 3rd digit
+
+        AssociadoData.RegistroGeral = input;
+    }
+
+
+
+    private void FormatarDataNascimento(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? string.Empty;
+        input = new string(input.Where(char.IsDigit).ToArray());
+
+        if (input.Length > 4)
+            input = input.Insert(4, "/");
+        if (input.Length > 2)
+            input = input.Insert(2, "/");
+
+        if (input.Length > 10) // Limita ao formato DD/MM/AAAA
+            input = input.Substring(0, 10);
+
+        AssociadoData.DataNascimento = input;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            associado = await Http.GetFromJsonAsync<Associado>("https://localhost:4000/api/Associados/" + Id);
+            AssociadoData.NomeTitular = associado?.NomeTitular ?? "";
+            AssociadoData.Endereco = associado?.Endereco ?? "";
+            AssociadoData.Bairro = associado?.Bairro ?? "";
+            AssociadoData.Cep = associado?.Cep ?? "";
+            AssociadoData.Complemento = associado?.Complemento ?? "";
+            AssociadoData.CidadeId = associado?.CidadeId ?? "";
+            AssociadoData.EstadoId = associado?.EstadoId ?? "";
+            AssociadoData.Celular = associado?.Celular ?? "";
+            AssociadoData.Email = associado?.Email ?? "";
+            AssociadoData.Facebook = associado?.Facebook ?? "";
+            AssociadoData.Instagram = associado?.Instagram ?? "";
+            AssociadoData.CPF = associado?.CPF ?? "";
+            AssociadoData.RegistroGeral = associado?.RegistroGeral ?? "";
+            AssociadoData.DataNascimento = associado?.DataNascimento ?? "";
+            AssociadoData.TipoDeAssociacao = associado?.TipoDeAssociacao ?? "";
+
+            estados = await Http.GetFromJsonAsync<List<Estado>>("https://localhost:4000/api/Estados");
+            cidades = await Http.GetFromJsonAsync<List<Cidade>>("https://localhost:4000/api/Cidades");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+    protected async Task SaveAssociado()
+    {
+        var response = await Http.PutAsJsonAsync("https://localhost:4000/api/Associados/" + Id, AssociadoData);
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Associados");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+    }
+}

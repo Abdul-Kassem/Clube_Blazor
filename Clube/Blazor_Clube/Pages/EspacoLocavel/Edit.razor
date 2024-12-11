@@ -1,0 +1,105 @@
+﻿@page "/EspacosLocaveis/Edit/{id:int}"
+@using Blazor_Clube.Models
+@using System.Text.Json.Nodes
+@inject HttpClient Http
+@inject NavigationManager navManager
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Editar Espaço Locavel</h1>
+
+        @if (espacolocavel == null)
+        {
+            <p><em>Carregando...</em></p>
+        }
+        else
+        {
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Nome</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EspacoLocavelData.NomeEspaco" />
+                    <span class="text-danger">@Erros["Nome"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Tamanho do Espaço</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EspacoLocavelData.Tamanho" />
+                    <span class="text-danger">@Erros["Tamanho do Espaço"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Capacidade de Pessoas</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EspacoLocavelData.CapacidadePessoas" />
+                    <span class="text-danger">@Erros["Capacidade de Pessoas"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label" for="locavel">Locável</label>
+                <div class="col-md-8">
+                    <input type="checkbox" id="locavel" class="form-check-input" @bind="EspacoLocavelData.Locavel" />
+                    <span class="text-danger">@Erros["Locavel"]?[0]</span>
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-md-4 col-md-4 d-grid">
+                    <button class="btn btn-primary" @onclick="SaveEspacoLocavel">Submit</button>
+                </div>
+                <div class="col-md-4 d-grid">
+                    <a class="btn btn-outline-primary" href="/EspacosLocaveis">Cancelar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+    public EspacoLocavel? espacolocavel = null;
+    public EspacoLocavelDto EspacoLocavelData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            espacolocavel = await Http.GetFromJsonAsync<EspacoLocavel>("https://localhost:4000/api/EspacosLocaveis/" + Id);
+            EspacoLocavelData.NomeEspaco = espacolocavel?.NomeEspaco ?? "";
+            EspacoLocavelData.Tamanho = espacolocavel?.Tamanho ?? "";
+            EspacoLocavelData.CapacidadePessoas = espacolocavel.CapacidadePessoas;
+            EspacoLocavelData.Locavel = espacolocavel.Locavel;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+    protected async Task SaveEspacoLocavel()
+    {
+        var response = await Http.PutAsJsonAsync("https://localhost:4000/api/EspacosLocaveis/" + Id, EspacoLocavelData);
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/EspacosLocaveis");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+    }
+}

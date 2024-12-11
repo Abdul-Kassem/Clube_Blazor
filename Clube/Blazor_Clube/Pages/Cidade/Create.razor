@@ -1,0 +1,89 @@
+﻿@page "/Cidades/Create"
+@using Blazor_Clube.Models
+@using Microsoft.AspNetCore.Components
+@using System.Text.Json.Nodes
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Nova Cidade</h1>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Nome</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="CidadeData.Nome" />
+                <span class="text-danger">@Erros["Nome"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">DDD</label>
+            <div class="col-md-8">
+                <input class="form-control" @bind="CidadeData.DDD" />
+                <span class="text-danger">@Erros["DDD"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">UF</label>
+            <div class="col-md-8">
+                <select class="form-control" @bind="CidadeData.EstadoId">
+                    <option value="">Selecione o estado</option>
+                    @foreach (var estado in Estados)
+                    {
+                        <option value="@estado.Id">@estado.Sigla</option>
+                    }
+                </select>
+                <span class="text-danger">@Erros["Estado"]?[0]</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4 col-md-4 d-grid">
+                <button class="btn btn-primary" @onclick="SaveCidade">Submit</button>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a class="btn btn-outline-primary" href="/Cidades">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@inject NavigationManager navManager
+@inject HttpClient Http
+@code {
+    public CidadeDto CidadeData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+    public List<Estado> Estados { get; set; } = new List<Estado>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the list of suppliers
+        Estados = await Http.GetFromJsonAsync<List<Estado>>("https://localhost:4000/api/Estados");
+    }
+
+    protected async Task SaveCidade()
+    {
+        var response = await Http.PostAsJsonAsync("https://localhost:4000/api/Cidades", CidadeData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Cidades");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Json Response: /n" + strResponse);
+
+
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+    }
+}

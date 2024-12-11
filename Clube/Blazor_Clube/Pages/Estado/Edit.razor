@@ -1,0 +1,86 @@
+﻿@page "/Estados/Edit/{id:int}"
+@using Blazor_Clube.Models
+@using System.Text.Json.Nodes
+@inject HttpClient Http
+@inject NavigationManager navManager
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-5">Editar Estado</h1>
+
+        @if (estado == null)
+        {
+            <p><em>Carregando...</em></p>
+        }
+        else
+        {
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Nome</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EstadoData.Nome" />
+                    <span class="text-danger">@Erros["Nome"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-md-4 col-form-label">Sigla</label>
+                <div class="col-md-8">
+                    <input class="form-control" @bind="EstadoData.Sigla" />
+                    <span class="text-danger">@Erros["Sigla"]?[0]</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 col-md-4 d-grid">
+                    <button class="btn btn-primary" @onclick="SaveEstado">Submit</button>
+                </div>
+                <div class="col-md-4 d-grid">
+                    <a class="btn btn-outline-primary" href="/Estados">Cancelar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+    public Estado? estado = null;
+    public EstadoDto EstadoData { set; get; } = new();
+    public JsonNode Erros { set; get; } = new JsonObject();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            estado = await Http.GetFromJsonAsync<Estado>("https://localhost:4000/api/Estados/" + Id);
+            EstadoData.Nome = estado?.Nome ?? "";
+            EstadoData.Sigla = estado?.Sigla ?? "";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+    protected async Task SaveEstado()
+    {
+        var response = await Http.PutAsJsonAsync("https://localhost:4000/api/Estados/" + Id, EstadoData);
+        if (response.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/Estados");
+        }
+        else
+        {
+            var strResponse = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var jsonResponse = JsonNode.Parse(strResponse);
+                Erros = jsonResponse?["erros"] ?? new JsonObject();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+    }
+}

@@ -1,0 +1,20 @@
+﻿@page "/EspacosLocaveis/Delete/{id:int}"
+@inject NavigationManager NavManager
+@inject HttpClient Http
+
+<h1 class="mb-3">Deletar EspacoLocavel</h1>
+<p>Você tem certeza que deseja deletar esse espaço com o ID @Id?</p>
+<button class="btn btn-danger" @onclick="DeleteEspacoLocavel">Deletar</button>
+<a class="btn btn-secondary" href="/EspacosLocaveis">Cancelar</a>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+
+
+    protected async Task DeleteEspacoLocavel()
+    {
+        var response = await Http.DeleteAsync("https://localhost:4000/api/EspacosLocaveis/" + Id);
+        NavManager.NavigateTo("/EspacosLocaveis");
+    }
+}

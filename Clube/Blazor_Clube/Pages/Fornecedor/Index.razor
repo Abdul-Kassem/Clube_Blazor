@@ -1,0 +1,104 @@
+﻿@page "/Fornecedores"
+@using Blazor_Clube.Models
+<h1 class="text-center mb-3">Lista de Fornecedores</h1>
+
+<a class="btn btn-primary mb-3" href="/Fornecedores/Create">Novo Fornecedor</a>
+
+@if (fornecedores == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NomeRazalSocial</th>
+                <th>Endereco</th>
+                <th>Bairro</th>
+                <th>Numero</th>
+                <th>CEP</th>
+                <th>CidadeId</th>
+                <th>UF</th>
+                <th>Celular</th>
+                <th>Email</th>
+                <th>Facebook</th>
+                <th>Instagram</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fornecedor in fornecedores)
+            {
+                <tr>
+                    <td>@fornecedor.Id</td>
+                    <td>@fornecedor.NomeRazaoSocial</td>
+                    <td>@fornecedor.Endereco</td>
+                    <td>@fornecedor.Bairro</td>
+                    <td>@fornecedor.Numero</td>
+                    <td>@fornecedor.CEP</td>
+                    <td>
+                        @* Display the supplier's name instead of the ID *@
+                        @{
+                            var cidade = cidades.FirstOrDefault(f => f.Id.ToString() == fornecedor.CidadeId);
+                        }
+                        @if (cidade != null)
+                        {
+                            @cidade.Nome
+                        }
+                        else
+                        {
+                            <em>Cidade não encontrado</em>
+                        }
+                    </td>
+                    <td>
+                        @* Display the supplier's name instead of the ID *@
+                        @{
+                            var estado = estados.FirstOrDefault(f => f.Id.ToString() == fornecedor.SiglaId);
+                        }
+                        @if (estado != null)
+                        {
+                            @estado.Sigla
+                        }
+                        else
+                        {
+                            <em>Fornecedor não encontrado</em>
+                        }
+                    </td>
+                    <td>@fornecedor.Celular</td>
+                    <td>@fornecedor.Email</td>
+                    <td>@fornecedor.Facebook</td>
+                    <td>@fornecedor.Instagram</td>
+                    <td style="white-space:nowrap">
+                        <a class="btn btn-primary btn-sm" href="/Fornecedores/Edit/@fornecedor.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/Fornecedores/Delete/@fornecedor.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@inject HttpClient Http
+@code {
+    private List<Fornecedor>? fornecedores;
+    private List<Estado> estados = new List<Estado>();
+    private List<Cidade> cidades = new List<Cidade>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+        fornecedores = await Http.GetFromJsonAsync<List<Fornecedor>>("https://localhost:4000/api/Fornecedores");
+        estados = await Http.GetFromJsonAsync<List<Estado>>("https://localhost:4000/api/Estados");
+        cidades = await Http.GetFromJsonAsync<List<Cidade>>("https://localhost:4000/api/Cidades");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+
+}

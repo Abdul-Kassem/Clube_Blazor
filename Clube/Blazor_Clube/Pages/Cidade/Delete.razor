@@ -1,0 +1,20 @@
+﻿@page "/Cidades/Delete/{id:int}"
+@inject NavigationManager NavManager
+@inject HttpClient Http
+
+<h1 class="mb-3">Deletar Cidade</h1>
+<p>Você tem certeza que deseja deletar essa cidade com o ID @Id?</p>
+<button class="btn btn-danger" @onclick="DeleteCidade">Deletar</button>
+<a class="btn btn-secondary" href="/cidades">Cancelar</a>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+
+
+    protected async Task DeleteCidade()
+    {
+        var response = await Http.DeleteAsync("https://localhost:4000/api/Cidades/" + Id);
+        NavManager.NavigateTo("/Cidades");
+    }
+}
